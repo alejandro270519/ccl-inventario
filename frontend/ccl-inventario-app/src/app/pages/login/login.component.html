@@ -1,0 +1,42 @@
+<div class="login-container">
+  <div class="login-card">
+    <h1>CCL Inventario</h1>
+    <h2>Iniciar Sesión</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label for="usuario">Usuario</label>
+        <input
+          id="usuario"
+          type="text"
+          formControlName="usuario"
+          placeholder="Ingresa tu usuario"
+          autocomplete="username"
+        />
+        <span class="error-msg" *ngIf="form.get('usuario')?.invalid && form.get('usuario')?.touched">
+          El usuario es requerido
+        </span>
+      </div>
+
+      <div class="field">
+        <label for="contrasena">Contraseña</label>
+        <input
+          id="contrasena"
+          type="password"
+          formControlName="contrasena"
+          placeholder="Ingresa tu contraseña"
+          autocomplete="current-password"
+        />
+        <span class="error-msg" *ngIf="form.get('contrasena')?.invalid && form.get('contrasena')?.touched">
+          La contraseña es requerida
+        </span>
+      </div>
+
+      <span class="error-msg server-error" *ngIf="error">{{ error }}</span>
+
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Cargando...' : 'Ingresar' }}
+      </button>
+    </form>
+  </div>
+</div>

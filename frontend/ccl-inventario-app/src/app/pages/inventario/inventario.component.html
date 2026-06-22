@@ -1,0 +1,45 @@
+<div class="page-container">
+  <header class="navbar">
+    <span class="brand">CCL Inventario</span>
+    <nav>
+      <a routerLink="/movimiento">Registrar Movimiento</a>
+      <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
+    </nav>
+  </header>
+
+  <main class="content">
+    <div class="section-header">
+      <h2>Inventario Actual</h2>
+      <button class="btn-refresh" (click)="cargarInventario()">Actualizar</button>
+    </div>
+
+    <div class="alert danger" *ngIf="error">{{ error }}</div>
+
+    <p *ngIf="loading">Cargando...</p>
+
+    <table *ngIf="!loading && productos.length > 0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of productos">
+          <td>{{ p.id }}</td>
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.cantidad }}</td>
+          <td>
+            <span class="badge" [class.badge-ok]="p.cantidad > 5" [class.badge-low]="p.cantidad <= 5">
+              {{ p.cantidad > 5 ? 'Disponible' : 'Stock bajo' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p *ngIf="!loading && productos.length === 0">No hay productos registrados.</p>
+  </main>
+</div>
