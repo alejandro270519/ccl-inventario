@@ -1,57 +1,86 @@
-<div class="page-container">
-  <header class="navbar">
-    <span class="brand">CCL Inventario</span>
-    <nav>
-      <a routerLink="/inventario">Ver Inventario</a>
-      <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
-    </nav>
-  </header>
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Movimientos</h1>
+    <p class="page-subtitle">Registra entradas y salidas de productos del inventario</p>
+  </div>
+</div>
 
-  <main class="content">
-    <h2>Registrar Movimiento</h2>
+<div class="mov-layout">
+  <div class="form-card">
+    <div class="alert-success" *ngIf="mensaje">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      {{ mensaje }}
+    </div>
+    <div class="alert-danger" *ngIf="error">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      {{ error }}
+    </div>
 
-    <div class="alert success" *ngIf="mensaje">{{ mensaje }}</div>
-    <div class="alert danger" *ngIf="error">{{ error }}</div>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label>Tipo de Movimiento</label>
+        <div class="toggle-group">
+          <button type="button" class="toggle-btn"
+            [class.active-entrada]="form.get('tipo')?.value === '0'"
+            (click)="setTipo('0')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>
+            </svg>
+            Entrada
+          </button>
+          <button type="button" class="toggle-btn"
+            [class.active-salida]="form.get('tipo')?.value === '1'"
+            (click)="setTipo('1')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
+            </svg>
+            Salida
+          </button>
+        </div>
+      </div>
 
-    <form [formGroup]="form" (ngSubmit)="submit()" class="form-card">
       <div class="field">
         <label for="productoId">Producto</label>
         <select id="productoId" formControlName="productoId">
           <option value="">-- Selecciona un producto --</option>
           <option *ngFor="let p of productos" [value]="p.id">
-            {{ p.nombre }} (Stock: {{ p.cantidad }})
+            {{ p.nombre }} &nbsp;·&nbsp; Stock: {{ p.cantidad }}
           </option>
         </select>
-        <span class="error-msg" *ngIf="form.get('productoId')?.invalid && form.get('productoId')?.touched">
+        <span class="field-error" *ngIf="form.get('productoId')?.invalid && form.get('productoId')?.touched">
           Selecciona un producto
         </span>
       </div>
 
       <div class="field">
-        <label for="tipo">Tipo de Movimiento</label>
-        <select id="tipo" formControlName="tipo">
-          <option value="0">Entrada</option>
-          <option value="1">Salida</option>
-        </select>
-      </div>
-
-      <div class="field">
         <label for="cantidad">Cantidad</label>
-        <input
-          id="cantidad"
-          type="number"
-          formControlName="cantidad"
-          placeholder="Ej: 5"
-          min="1"
-        />
-        <span class="error-msg" *ngIf="form.get('cantidad')?.invalid && form.get('cantidad')?.touched">
+        <input id="cantidad" type="number" formControlName="cantidad" placeholder="Ej: 5" min="1" />
+        <span class="field-error" *ngIf="form.get('cantidad')?.invalid && form.get('cantidad')?.touched">
           La cantidad debe ser mayor a 0
         </span>
       </div>
 
-      <button type="submit" [disabled]="loading">
+      <button type="submit" class="btn-submit" [disabled]="loading || form.invalid">
+        <svg *ngIf="!loading" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+          <polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+        </svg>
         {{ loading ? 'Guardando...' : 'Registrar Movimiento' }}
       </button>
     </form>
-  </main>
+  </div>
+
+  <div class="stock-panel">
+    <div class="card-header"><h3>Stock Actual</h3></div>
+    <div class="stock-list">
+      <div class="stock-item" *ngFor="let p of productos">
+        <span class="stock-name">{{ p.nombre }}</span>
+        <span class="stock-qty" [class.qty-low]="p.cantidad <= 5">{{ p.cantidad }}</span>
+      </div>
+    </div>
+  </div>
 </div>

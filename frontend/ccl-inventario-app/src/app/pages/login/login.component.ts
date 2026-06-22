@@ -31,7 +31,7 @@ export class LoginComponent {
     const { usuario, contrasena } = this.form.value;
 
     this.auth.login(usuario, contrasena).subscribe({
-      next: () => this.router.navigate(['/inventario']),
+      next: () => this.router.navigate(['/dashboard']),
       error: () => {
         this.error = 'Credenciales inválidas. Intenta de nuevo.';
         this.loading = false;

@@ -1,45 +1,61 @@
-<div class="page-container">
-  <header class="navbar">
-    <span class="brand">CCL Inventario</span>
-    <nav>
-      <a routerLink="/movimiento">Registrar Movimiento</a>
-      <button class="btn-logout" (click)="logout()">Cerrar Sesión</button>
-    </nav>
-  </header>
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Inventario</h1>
+    <p class="page-subtitle">Estado actual de todos los productos registrados</p>
+  </div>
+  <button class="btn-primary" (click)="cargarInventario()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+    </svg>
+    Actualizar
+  </button>
+</div>
 
-  <main class="content">
-    <div class="section-header">
-      <h2>Inventario Actual</h2>
-      <button class="btn-refresh" (click)="cargarInventario()">Actualizar</button>
-    </div>
+<div class="alert-danger" *ngIf="error">{{ error }}</div>
 
-    <div class="alert danger" *ngIf="error">{{ error }}</div>
+<div *ngIf="loading" class="skeleton-grid">
+  <div class="skeleton-row" *ngFor="let i of [1,2,3,4,5]"></div>
+</div>
 
-    <p *ngIf="loading">Cargando...</p>
-
-    <table *ngIf="!loading && productos.length > 0">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Producto</th>
-          <th>Cantidad</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let p of productos">
-          <td>{{ p.id }}</td>
-          <td>{{ p.nombre }}</td>
-          <td>{{ p.cantidad }}</td>
-          <td>
-            <span class="badge" [class.badge-ok]="p.cantidad > 5" [class.badge-low]="p.cantidad <= 5">
-              {{ p.cantidad > 5 ? 'Disponible' : 'Stock bajo' }}
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p *ngIf="!loading && productos.length === 0">No hay productos registrados.</p>
-  </main>
+<div class="table-card" *ngIf="!loading">
+  <div class="table-info-bar">
+    <span>{{ productos.length }} productos registrados</span>
+  </div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Disponibilidad</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of productos">
+        <td class="td-id">#{{ p.id }}</td>
+        <td class="td-nombre">{{ p.nombre }}</td>
+        <td class="td-cantidad">{{ p.cantidad }}</td>
+        <td class="td-bar">
+          <div class="stock-bar-track">
+            <div class="stock-bar-fill"
+              [style.width.%]="stockPct(p.cantidad)"
+              [class.bar-green]="p.cantidad > 10"
+              [class.bar-yellow]="p.cantidad > 5 && p.cantidad <= 10"
+              [class.bar-red]="p.cantidad <= 5">
+            </div>
+          </div>
+        </td>
+        <td>
+          <span class="badge"
+            [class.badge-success]="p.cantidad > 10"
+            [class.badge-warning]="p.cantidad > 5 && p.cantidad <= 10"
+            [class.badge-danger]="p.cantidad <= 5">
+            {{ p.cantidad > 10 ? 'Óptimo' : p.cantidad > 5 ? 'Normal' : 'Crítico' }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="empty-msg" *ngIf="productos.length === 0">No hay productos registrados.</p>
 </div>

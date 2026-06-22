@@ -70,7 +70,10 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "optimization": {
+                "fonts": false
+              }
             },
             "development": {
               "optimization": false,
@@ -117,5 +120,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "97b87acb-f78a-44d2-ae07-686b8af08a1a"
   }
 }

@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { ProductosService } from '../../core/services/productos.service';
-import { AuthService } from '../../core/services/auth.service';
 import { Producto } from '../../core/models/producto.model';
 
 @Component({
   selector: 'app-movimiento',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './movimiento.component.html',
 })
 export class MovimientoComponent implements OnInit {
@@ -19,11 +17,7 @@ export class MovimientoComponent implements OnInit {
   error = '';
   loading = false;
 
-  constructor(
-    fb: FormBuilder,
-    private productosService: ProductosService,
-    private auth: AuthService
-  ) {
+  constructor(fb: FormBuilder, private productosService: ProductosService) {
     this.form = fb.group({
       productoId: ['', Validators.required],
       cantidad: ['', [Validators.required, Validators.min(1)]],
@@ -32,10 +26,18 @@ export class MovimientoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.recargarProductos();
+  }
+
+  recargarProductos(): void {
     this.productosService.getInventario().subscribe({
       next: data => (this.productos = data),
       error: () => (this.error = 'No se pudo cargar la lista de productos'),
     });
+  }
+
+  setTipo(valor: string): void {
+    this.form.patchValue({ tipo: valor });
   }
 
   submit(): void {
@@ -56,16 +58,12 @@ export class MovimientoComponent implements OnInit {
         this.mensaje = res.mensaje;
         this.form.reset({ tipo: '0' });
         this.loading = false;
-        this.productosService.getInventario().subscribe(data => (this.productos = data));
+        this.recargarProductos();
       },
       error: err => {
         this.error = err.error?.mensaje || 'Error al registrar el movimiento';
         this.loading = false;
       },
     });
-  }
-
-  logout(): void {
-    this.auth.logout();
   }
 }

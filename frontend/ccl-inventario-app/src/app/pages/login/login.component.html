@@ -1,42 +1,62 @@
-<div class="login-container">
-  <div class="login-card">
-    <h1>CCL Inventario</h1>
-    <h2>Iniciar Sesión</h2>
-
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      <div class="field">
-        <label for="usuario">Usuario</label>
-        <input
-          id="usuario"
-          type="text"
-          formControlName="usuario"
-          placeholder="Ingresa tu usuario"
-          autocomplete="username"
-        />
-        <span class="error-msg" *ngIf="form.get('usuario')?.invalid && form.get('usuario')?.touched">
-          El usuario es requerido
-        </span>
+<div class="login-root">
+  <div class="login-left">
+    <div class="login-brand">
+      <div class="login-brand-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+        </svg>
       </div>
-
-      <div class="field">
-        <label for="contrasena">Contraseña</label>
-        <input
-          id="contrasena"
-          type="password"
-          formControlName="contrasena"
-          placeholder="Ingresa tu contraseña"
-          autocomplete="current-password"
-        />
-        <span class="error-msg" *ngIf="form.get('contrasena')?.invalid && form.get('contrasena')?.touched">
-          La contraseña es requerida
-        </span>
+      <span>CCL Inventario</span>
+    </div>
+    <div class="login-hero">
+      <h1>Control de Inventario<br/><span>Profesional</span></h1>
+      <p>Gestiona entradas, salidas y stock de tus productos en tiempo real desde un panel centralizado.</p>
+      <div class="login-features">
+        <div class="login-feature">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Dashboard con KPIs en tiempo real
+        </div>
+        <div class="login-feature">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Registro de entradas y salidas
+        </div>
+        <div class="login-feature">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Alertas de stock crítico
+        </div>
       </div>
+    </div>
+  </div>
 
-      <span class="error-msg server-error" *ngIf="error">{{ error }}</span>
+  <div class="login-right">
+    <div class="login-form-wrap">
+      <h2>Bienvenido</h2>
+      <p class="login-subtitle">Ingresa tus credenciales para continuar</p>
 
-      <button type="submit" [disabled]="loading">
-        {{ loading ? 'Cargando...' : 'Ingresar' }}
-      </button>
-    </form>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="field">
+          <label for="usuario">Usuario</label>
+          <input id="usuario" type="text" formControlName="usuario" placeholder="admin" autocomplete="username" />
+          <span class="field-error" *ngIf="form.get('usuario')?.invalid && form.get('usuario')?.touched">
+            El usuario es requerido
+          </span>
+        </div>
+
+        <div class="field">
+          <label for="contrasena">Contraseña</label>
+          <input id="contrasena" type="password" formControlName="contrasena" placeholder="••••••••" autocomplete="current-password" />
+          <span class="field-error" *ngIf="form.get('contrasena')?.invalid && form.get('contrasena')?.touched">
+            La contraseña es requerida
+          </span>
+        </div>
+
+        <div class="alert-danger" *ngIf="error">{{ error }}</div>
+
+        <button type="submit" class="btn-submit" [disabled]="loading">
+          {{ loading ? 'Verificando...' : 'Iniciar Sesión' }}
+        </button>
+      </form>
+    </div>
   </div>
 </div>

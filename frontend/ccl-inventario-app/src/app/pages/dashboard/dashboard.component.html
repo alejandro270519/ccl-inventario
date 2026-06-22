@@ -1,0 +1,122 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Resumen general del sistema de inventario CCL</p>
+  </div>
+</div>
+
+<div *ngIf="loading" class="skeleton-grid">
+  <div class="skeleton-card" *ngFor="let i of [1,2,3,4]"></div>
+</div>
+
+<ng-container *ngIf="!loading">
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-blue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Productos Registrados</span>
+        <span class="kpi-value">{{ totalProductos }}</span>
+        <span class="kpi-trend neutral">Total en catálogo</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-green">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Unidades en Stock</span>
+        <span class="kpi-value">{{ totalUnidades }}</span>
+        <span class="kpi-trend up">Total de unidades</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon" [class]="stockBajo > 0 ? 'kpi-red' : 'kpi-green'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Stock Crítico</span>
+        <span class="kpi-value">{{ stockBajo }}</span>
+        <span class="kpi-trend" [class]="stockBajo > 0 ? 'down' : 'up'">
+          {{ stockBajo > 0 ? 'Requieren atención' : 'Todo en orden' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-purple">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+          <polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Disponibilidad</span>
+        <span class="kpi-value">{{ disponibilidad }}%</span>
+        <span class="kpi-trend neutral">Productos disponibles</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-bottom">
+    <div class="table-card">
+      <div class="card-header">
+        <h3>Estado del Inventario</h3>
+        <a routerLink="/inventario" class="card-link">Ver todo →</a>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Producto</th><th>Cantidad</th><th>Estado</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of productos">
+            <td>{{ p.nombre }}</td>
+            <td>{{ p.cantidad }}</td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'badge-success': p.cantidad > 10,
+                'badge-warning': p.cantidad > 5 && p.cantidad <= 10,
+                'badge-danger':  p.cantidad <= 5
+              }">{{ p.cantidad > 10 ? 'Óptimo' : p.cantidad > 5 ? 'Normal' : 'Crítico' }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="actions-card">
+      <div class="card-header"><h3>Acciones Rápidas</h3></div>
+      <div class="quick-actions">
+        <a routerLink="/movimiento" class="quick-action-btn entrada">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>
+          </svg>
+          <div><strong>Registrar Entrada</strong><small>Agregar stock al inventario</small></div>
+        </a>
+        <a routerLink="/movimiento" class="quick-action-btn salida">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
+          </svg>
+          <div><strong>Registrar Salida</strong><small>Reducir stock del inventario</small></div>
+        </a>
+        <a routerLink="/inventario" class="quick-action-btn inventario">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+          <div><strong>Ver Inventario</strong><small>Consultar estado completo</small></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</ng-container>
