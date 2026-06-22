@@ -1,7 +1,6 @@
 # .NET
 backend/bin/
 backend/obj/
-backend/Migrations/
 *.user
 *.suo
 .vs/
