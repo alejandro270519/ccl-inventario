@@ -2,44 +2,46 @@
 
 MiniSistema de Gestión de Inventario para la empresa **CCL**.
 
-## Tecnologías
+## Demo en vivo
 
-- **Backend:** C# .NET Core 9 + Entity Framework Core + JWT
-- **Frontend:** Angular v19 + TypeScript
-- **Base de Datos:** PostgreSQL
+**URL:** https://alejandro270519.github.io/ccl-inventario/
 
-## Credenciales de prueba
+> El demo en línea funciona en modo offline con datos de muestra.
+> Para funcionalidad completa con base de datos real, ejecuta el proyecto localmente.
+
+## Credenciales de acceso
 
 ```
-Usuario: admin
+Usuario:    admin
 Contraseña: admin123
 ```
 
-## Requisitos
+## Tecnologías
+
+- **Backend:** C# .NET Core 9 + Entity Framework Core + JWT Bearer
+- **Frontend:** Angular v19 + TypeScript (standalone components)
+- **Base de Datos:** PostgreSQL 17
+
+## Ejecutar localmente
+
+### Requisitos previos
 
 - .NET SDK 9
 - Node.js 18+
+- PostgreSQL (puerto 5432, usuario `postgres`, contraseña `postgres`)
 - Angular CLI v19: `npm install -g @angular/cli@19`
-- PostgreSQL (local, puerto 5432)
 
-## Configuración de la Base de Datos
-
-1. Asegúrate de tener PostgreSQL corriendo localmente.
-2. El connection string por defecto usa: `Host=localhost;Database=ccl_inventario;Username=postgres;Password=postgres`.
-3. Si tus credenciales son distintas, edita `backend/appsettings.json`.
-
-## Ejecutar el Backend
+### Backend
 
 ```bash
 cd backend
 dotnet restore
-dotnet ef database update
 dotnet run
 ```
 
-La API queda en `http://localhost:5000`.
+La API queda disponible en `http://localhost:5000`.
 
-## Ejecutar el Frontend
+### Frontend
 
 ```bash
 cd frontend/ccl-inventario-app
@@ -47,17 +49,17 @@ npm install
 ng serve
 ```
 
-La app queda en `http://localhost:4200`.
+La aplicación queda disponible en `http://localhost:4200`.
 
 ## Endpoints de la API
 
 | Método | Endpoint                   | Auth | Descripción                     |
 |--------|----------------------------|------|---------------------------------|
 | POST   | /auth/login                | No   | Autenticación, retorna JWT      |
-| POST   | /productos/movimiento      | Sí   | Registrar entrada o salida      |
 | GET    | /productos/inventario      | Sí   | Consultar inventario actual     |
+| POST   | /productos/movimiento      | Sí   | Registrar entrada o salida      |
 
-### Ejemplo: Login
+### Ejemplo login
 
 ```json
 POST /auth/login
@@ -67,7 +69,7 @@ POST /auth/login
 }
 ```
 
-### Ejemplo: Movimiento
+### Ejemplo movimiento
 
 ```json
 POST /productos/movimiento
@@ -80,4 +82,14 @@ Authorization: Bearer <token>
 }
 ```
 
-`tipo`: `0` = Entrada, `1` = Salida.
+`tipo`: `0` = Entrada · `1` = Salida
+
+## Productos iniciales (seed)
+
+| ID | Nombre               | Cantidad |
+|----|----------------------|----------|
+| 1  | Laptop Dell          | 10       |
+| 2  | Monitor Samsung      | 15       |
+| 3  | Teclado Logitech     | 25       |
+| 4  | Mouse Inalámbrico    | 30       |
+| 5  | Auriculares Sony     | 8        |
